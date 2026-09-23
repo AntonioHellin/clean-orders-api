@@ -38,8 +38,8 @@ src/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/AntonioHellin/clean-orders.git
-   cd clean-orders
+   git clone https://github.com/AntonioHellin/clean-orders-api.git
+   cd clean-orders-api
    ```
 
 2. **Install dependencies**:
