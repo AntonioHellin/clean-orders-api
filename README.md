@@ -1,49 +1,121 @@
-# Clean Architecture Orders API 📦
+# clean-orders-api 📦
 
-Una implementación de Clean Architecture pura (Hexagonal) utilizando TypeScript. Este proyecto demuestra cómo separar la lógica de negocio, las reglas de aplicación y las preocupaciones de infraestructura para un dominio de "Pedidos" (Orders).
+A pure Hexagonal / Clean Architecture implementation using TypeScript and Fastify. This project demonstrates how to cleanly decouple enterprise domain logic, application use cases, and infrastructure adapters for an Orders domain.
 
-## 🏗️ Arquitectura
+## Architecture
 
-El proyecto sigue un diseño de Hexagonal Architecture estricto sin usar frameworks en las capas internas, garantizando que el Core del sistema sea comprobable y agnóstico a la tecnología elegida.
+The project adheres to strict Ports and Adapters (Hexagonal Architecture) design principles without framework leaks inside inner layers. This ensures the domain core is fully testable and decoupled from external technologies:
 
 ```text
-/src
-  ├── /domain         # (Core) Value Objects, Entities, Domain Events y Domain Errors puros.
-  ├── /application    # (Use Cases) Casos de uso de la aplicación, DTOs y Puertos (Interfaces).
-  ├── /infrastructure # (Adapters) Controladores HTTP (Fastify), Repositorios y Servicios reales.
-  └── /composition    # (Composition Root) Único lugar donde se inyectan dependencias.
+src/
+  ├── domain/         # (Core) Value Objects, Entities, Domain Events, and Domain Errors
+  ├── application/    # (Use Cases) Application use cases, DTOs, and Port Interfaces
+  ├── infraestructure/# (Adapters) Fastify HTTP controllers, in-memory repositories, and real services
+  ├── composition/    # (Composition Root) Single container where dependencies are assembled
+  ├── shared/         # Functional Result<T, E> types and common utility definitions
+  └── main.ts         # Application entry point and graceful server lifecycle bootstrap
 ```
 
-## 🚀 Tecnologías
+## Technologies & Design Patterns
 
-*   **Lenguaje:** TypeScript (ESM)
-*   **Servidor HTTP:** Fastify
-*   **Dominio:** Patrones Tácticos de DDD (Aggregate Routes, Value Objects, Domain Events)
-*   **Manejo de Errores:** Tipos discriminados funcionales `Result<T, E>` en lugar de `throw new Error()`.
+- **Language & Runtime**: TypeScript (ESM modules), Node.js
+- **HTTP Engine**: Fastify
+- **Tactical Domain-Driven Design (DDD)**:
+  - Aggregate Root (`Order`)
+  - Strongly typed Value Objects (`OrderId`, `SKU`, `Quantity`, `Money`, `Currency`)
+  - Domain Events (`OrderCreated`, `ItemAddedToOrder`)
+- **Functional Error Handling**: Explicit discriminated union `Result<T, E>` (`Success<T>` / `Failure<E>`) avoiding uncontrolled exceptions.
+- **Testing**: Vitest with isolated in-memory unit tests.
 
-## ⚙️ Cómo ejecutar
+## Getting Started
 
-1. Instalar dependencias:
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/AntonioHellin/clean-orders.git
+   cd clean-orders
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Arrancar el servidor en modo desarrollo:
+3. **Configure environment variables**:
    ```bash
-   npm run dev
+   cp .env.example .env
    ```
 
-El servidor web arrancará en el puerto `3000` (o el indicado por la variable de entorno `PORT`).
+### Running Locally
 
-## 🧪 Ejemplos de uso (API)
+- **Development mode** (with Hot Reloading via `tsx`):
+  ```bash
+  npm run dev
+  ```
+- **Type checking & compilation**:
+  ```bash
+  npm run build
+  ```
+- **Production mode**:
+  ```bash
+  npm start
+  ```
 
-**Crear un Pedido**
-```powershell
-curl.exe -X POST http://localhost:3000/api/v1/orders -H "Content-Type: application/json" -d "{\"orderId\": \"ORDER-123\", \"customerId\": \"CUST-456\"}"
+The server listens on port `3000` by default (or the configured `PORT` environment variable).
+
+## Testing
+
+Execute the automated Vitest test suite:
+```bash
+# Single test run
+npm test
+
+# Watch mode
+npm run test:watch
 ```
 
-**Añadir un Item a un Pedido**
-*(Asegúrate de que el orderId es el mismo que creaste en el paso anterior)*
-```powershell
-curl.exe -X POST http://localhost:3000/api/v1/orders/ORDER-123/items -H "Content-Type: application/json" -d "{\"sku\": \"LAPTOP\", \"quantity\": 2}"
+## API Usage Examples
+
+### 1. Create an Order
+```bash
+curl -X POST http://localhost:3000/api/v1/orders \
+  -H "Content-Type: application/json" \
+  -d '{"orderId": "ORDER-123", "customerId": "CUST-456"}'
 ```
+
+**Expected Response**:
+```json
+{
+  "message": "Order created successfully",
+  "orderId": "ORDER-123"
+}
+```
+
+### 2. Add an Item to an Order
+```bash
+curl -X POST http://localhost:3000/api/v1/orders/ORDER-123/items \
+  -H "Content-Type: application/json" \
+  -d '{"sku": "LAPTOP", "quantity": 2}'
+```
+
+**Expected Response**:
+```json
+{
+  "message": "Item added to order successfully",
+  "orderId": "ORDER-123",
+  "item": {
+    "sku": "LAPTOP",
+    "quantity": 2
+  }
+}
+```
+
+## License
+
+Proprietary / All Rights Reserved.

@@ -1,6 +1,36 @@
-node_modules
-dist
-.DS_Store
-.vscode
+# Dependencies
+node_modules/
+
+# Production build outputs
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# Environment variables & secrets
 .env
-.claude
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+.vitest/
+
+# Editor & OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.claude/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

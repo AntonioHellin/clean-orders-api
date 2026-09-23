@@ -1,7 +1,8 @@
 {
-  "name": "clean-orders-ts",
+  "name": "clean-orders-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hexagonal Clean Architecture Orders REST API built with TypeScript and Fastify",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "tsx src/main.ts",
