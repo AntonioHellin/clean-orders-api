@@ -115,7 +115,3 @@ curl -X POST http://localhost:3000/api/v1/orders/ORDER-123/items \
   }
 }
 ```
-
-## License
-
-Proprietary / All Rights Reserved.
